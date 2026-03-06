@@ -3,6 +3,7 @@
 #-----------------------------------------------------------------------------------------------------------------------
 # Top-level Imports
 import os
+import socket
 from datetime import datetime, timedelta
 import pandas as pd
 import numpy as np
@@ -21,6 +22,11 @@ from EUVpy.tools.toolbox import uniformSample, imputeData, rollingAverage, rolli
 #-----------------------------------------------------------------------------------------------------------------------
 # Folder for downloading F10.7 data:
 F107Folder = '../solarIndices/F107/OMNIWeb/'
+#-----------------------------------------------------------------------------------------------------------------------
+
+#-----------------------------------------------------------------------------------------------------------------------
+# set global default timeout for urlretrieve (in seconds)
+socket.setdefaulttimeout(30)
 #-----------------------------------------------------------------------------------------------------------------------
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -162,17 +168,19 @@ def getCLSF107(dateStart, dateEnd, truncate=True, rewrite=True):
     # 1: Check if there is ALREADY a F10.7 file present:
     #fname = '../solarIndices/F107/radio_flux_adjusted_observation.txt'
     fname = euvpy_app_folder.joinpath("radio_flux_adjusted_observation.txt")
+
+
     if fname.exists() and rewrite == False:
         # Read in the file:
         times, data = readCLS(fname)
         # Check if the ending date exceeds the ending date in the file. If so, redownloading the file:
-        if times[-1] > dateTimeEnd:
-            out = urllib.request.urlretrieve(
+        if times[-1] < dateTimeEnd:
+            urllib.request.urlretrieve(
                 'ftp://ftpsedr.cls.fr/pub/previsol/solarflux/observation/radio_flux_adjusted_observation.txt', fname)
-        times, data = readCLS(fname)
+            times, data = readCLS(fname)
     else:
         # Download the file:
-        out = urllib.request.urlretrieve('ftp://ftpsedr.cls.fr/pub/previsol/solarflux/observation/radio_flux_adjusted_observation.txt', fname)
+        urllib.request.urlretrieve('ftp://ftpsedr.cls.fr/pub/previsol/solarflux/observation/radio_flux_adjusted_observation.txt', fname)
         times, data = readCLS(fname)
 
     # Compute the 81-day (centered) averaged F10.7 and 54-day averaged (:
