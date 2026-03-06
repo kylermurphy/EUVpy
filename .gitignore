@@ -34,7 +34,7 @@ src/EUVpy/tools/myTimesFISM2.pkl
 *.egg-info
 __pycache__
 *.pyc
-*/*.egg-info/
+*/src/*.egg-info/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
