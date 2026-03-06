@@ -34,5 +34,5 @@ src/EUVpy/tools/myTimesFISM2.pkl
 *.egg-info
 __pycache__
 *.pyc
-*/*.egg-info/
+*\*.egg-info\
 *.egg-info/
