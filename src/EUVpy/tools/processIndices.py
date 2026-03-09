@@ -4,11 +4,14 @@
 # Top-level Imports
 import os
 import socket
+
 from datetime import datetime, timedelta
+
+import requests
 import pandas as pd
 import numpy as np
-import sys, csaps
-import matplotlib
+import csaps
+
 
 import urllib.request
 from pathlib import Path
