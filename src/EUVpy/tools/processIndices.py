@@ -195,6 +195,67 @@ def getCLSF107(dateStart, dateEnd, truncate=True, rewrite=True):
         goodInds = goodInds[:-81]
     return np.asarray(times)[goodInds], np.asarray(F107)[goodInds], np.asarray(F107A)[goodInds], np.asarray(F107B)[goodInds]
 
+
+def getCelestTrackInd(dateStart, dateEnd):
+    """
+    Obtains Sun-Earth distance adjusted, F10.7 data from https://celestrak.org/. 
+    Streams the data from the web so it's always upto date.
+    Reads the file and extracts the F10.7 values between two dates. 
+
+    Parameters
+    ----------
+    dateStart : str
+        The starting date in YYYY-MM-DD format.
+    dateEnd : str
+        The ending date in YYYY-MM-DD format.
+
+    Returns
+    -------
+    times : list
+        The datetimes for each data value.
+    F107 : arraylike
+        Solar flux at 10.7 cm.
+    F107A : arraylike
+        81-day averaged solar flux at 10.7 cm, centered on the current day.
+    F107B : arraylike
+        54-day averaged solar flux at 10.7 cm, averaged in a backwards-looking window.
+    """
+    url = 'https://celestrak.org/SpaceData/SW-Last5Years.txt'
+
+    t = []
+    f107 = []
+
+    with requests.get(url, stream=True, timeout=30) as r:
+        r.raise_for_status()
+        for line in r.iter_lines():
+            if line:
+                line = line.decode('utf-8')
+                if line[0] == '#':
+                    continue
+                elif len(line) != 130: 
+                    continue
+                elif line.strip() == 'END OBSERVED':
+                    break
+                
+                dat = line.split()
+                yr = dat[0]
+                mm = dat[1]
+                dd = dat[2]
+                
+                t.append(pd.to_datetime(f'{yr}-{mm}-{dd} 12:00:00'))
+                f107.append(dat[-7])
+
+    times = np.asarray(t)        
+    F107 = np.array(f107, dtype=np.float64)
+    F107A = rollingAverage(F107, window_length=81, impute_edges=True)
+    F107B = rollingAverage(F107, window_length=54, impute_edges=True, center=False)
+
+
+    goodInds = np.where((times >= pd.to_datetime(dateStart)) & 
+                        (times <= pd.to_datetime(dateEnd)))
+
+    return times[goodInds], F107[goodInds], F107A[goodInds], F107B[goodInds]
+
 def getF107(dateStart, dateEnd):
     """
     Given two dates (a start date and an ending date), automatically download F10.7 data from NASA OMNIWeb.
