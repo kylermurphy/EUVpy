@@ -4,7 +4,7 @@
 # Top-level Imports:
 import numpy as np
 import matplotlib, sys
-matplotlib.use('Qt5Agg')
+
 from datetime import datetime
 #-----------------------------------------------------------------------------------------------------------------------
 

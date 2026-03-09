@@ -10,7 +10,7 @@ import numpy as np
 import pickle
 from datetime import datetime, timedelta
 import matplotlib
-matplotlib.use('Qt5Agg')
+
 from netCDF4 import Dataset
 #-----------------------------------------------------------------------------------------------------------------------
 

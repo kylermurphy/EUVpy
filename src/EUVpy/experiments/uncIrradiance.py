@@ -4,7 +4,7 @@
 # Top-level Imports:
 import numpy as np
 import matplotlib, sys
-matplotlib.use('Qt5Agg')
+
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 from scipy.optimize import curve_fit

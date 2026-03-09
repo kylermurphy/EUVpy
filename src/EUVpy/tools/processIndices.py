@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import sys, csaps
 import matplotlib
-matplotlib.use('Qt5Agg')
+
 import urllib.request
 from pathlib import Path
 #-----------------------------------------------------------------------------------------------------------------------
@@ -187,7 +187,7 @@ def getCLSF107(dateStart, dateEnd, truncate=True, rewrite=True):
     F107 = data[:, 2]
     F107A = rollingAverage(F107, window_length=81, impute_edges=True)
     F107B = rollingAverage(F107, window_length=54, impute_edges=True, center=False)
-    print(f'\n\nlen(F107) = {len(F107)}, len(F107B) = {len(F107B)}, len(F107B) = {len(F107B)}')
+    #print(f'\n\nlen(F107) = {len(F107)}, len(F107B) = {len(F107B)}, len(F107B) = {len(F107B)}')
     # Extract the values in the desired time range:
     goodInds = np.where((np.asarray(times) >= dateTimeStart) & (np.asarray(times) <= dateTimeEnd))[0]
     # Truncation:

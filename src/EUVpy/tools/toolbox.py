@@ -14,7 +14,7 @@ from scipy.interpolate import CubicSpline
 from scipy.interpolate import InterpolatedUnivariateSpline
 from scipy.optimize import curve_fit
 import matplotlib
-matplotlib.use('Qt5Agg')
+
 import matplotlib.pyplot as plt
 from scipy.stats import pearsonr
 from sklearn.metrics import mean_squared_error
